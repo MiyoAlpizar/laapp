@@ -15,7 +15,7 @@ struct Contact {
     let image: Data?
     
     
-    //MARK:- Read Only properties
+    //MARK:- Computed Read Only properties
     var fullName: String {
         get {
             return "\(firstName) \(lastName)"
@@ -35,6 +35,20 @@ struct Contact {
         get {
             return "\(firstName.prefix(1).uppercased())\(lastName.prefix(1).uppercased())"
         }
+    }
+    
+    var hasName: Bool {
+        return !fullName.trim().isEmpty
+    }
+    
+    var tenPhoneNumber: String {
+        let digits = firstNumber.digits
+        if (digits.count == 10) {
+            return digits
+        }else if digits.count > 10 {
+            return digits.suffix(10).description
+        }
+        return digits
     }
     
     

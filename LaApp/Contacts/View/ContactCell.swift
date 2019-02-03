@@ -22,7 +22,7 @@ class ContactCell: UITableViewCell {
                     initalsLabel.isHidden = true
                 }
                 nameContact.text = contact.fullName
-                phoneContact.text = contact.firstNumber.digits
+                phoneContact.text = contact.tenPhoneNumber
                 initalsLabel.text = contact.initials
             }
         }

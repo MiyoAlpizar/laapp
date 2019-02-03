@@ -37,6 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UITableView.appearance().backgroundColor = UIColor.bgPrimary
         
+        
     }
     
     func customInit() {

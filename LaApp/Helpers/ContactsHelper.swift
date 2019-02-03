@@ -9,15 +9,24 @@
 import Contacts
 import PromiseKit
 
+protocol ContactsDelegate:class {
+    func addressBookChanged()
+}
+
 class ContactsHelper {
     
     private static let _shared = ContactsHelper()
+    weak var delegate: ContactsDelegate?
     
     static var shared: ContactsHelper {
         return _shared
     }
     
     private let contactsStore = CNContactStore()
+    
+    init() {
+        NotificationCenter.default.addObserver(self, selector: #selector(onAddressBookchanged), name: NSNotification.Name.CNContactStoreDidChange, object: nil)
+    }
     
     func getContacts() -> Promise<[Contact]> {
         return Promise { seal in
@@ -36,9 +45,9 @@ class ContactsHelper {
                             contact.phoneNumbers.forEach({ (number) in
                                 numbers.append(number.value.stringValue)
                             })
-                            contacts.append(Contact(firstName: contact.givenName, lastName: contact.familyName, numbers: numbers, image: contact.imageData))
+                            contacts.append(Contact(firstName: contact.givenName.trim(), lastName: contact.familyName.trim(), numbers: numbers, image: contact.imageData))
                         })
-                        seal.fulfill(contacts)
+                        seal.fulfill(contacts.sorted(by: { $0.fullName < $1.fullName}))
                     }catch let error {
                         seal.reject(error)
                     }
@@ -46,6 +55,13 @@ class ContactsHelper {
             }
         }
         
+    }
+    
+    @objc private func onAddressBookchanged() {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.addressBookChanged()
     }
     
 }

@@ -19,4 +19,8 @@ extension String {
         return self.lowercased().folding(options: [.diacriticInsensitive, .caseInsensitive], locale: nil)
     }
     
+    func trim() -> String {
+        return self.trimmingCharacters(in: NSCharacterSet.whitespaces)
+    }
+    
 }
