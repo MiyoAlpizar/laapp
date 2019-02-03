@@ -35,19 +35,24 @@ class ContactsHelper {
                     seal.reject(error)
                 }else if success {
                     
-                    let keys = [CNContactGivenNameKey, CNContactFamilyNameKey,CNContactPhoneNumbersKey, CNContactImageDataKey] as [CNKeyDescriptor]
+                    let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey ,CNContactPhoneNumbersKey, CNContactImageDataKey] as [CNKeyDescriptor]
                     let request = CNContactFetchRequest(keysToFetch: keys)
                     do {
                         var contacts = [Contact]()
                         try self.contactsStore.enumerateContacts(with: request, usingBlock: { (contact, pointerStop) in
                             var numbers = [String]()
+                            var emails = [String]()
+                            
+                            contact.emailAddresses.forEach({ (email) in
+                                emails.append(email.value.description)
+                            })
                             
                             contact.phoneNumbers.forEach({ (number) in
                                 numbers.append(number.value.stringValue)
                             })
-                            contacts.append(Contact(firstName: contact.givenName.trim(), lastName: contact.familyName.trim(), numbers: numbers, image: contact.imageData))
+                            contacts.append(Contact(firstName: contact.givenName.trim(), lastName: contact.familyName.trim(), emails: emails, numbers: numbers, image: contact.imageData))
                         })
-                        seal.fulfill(contacts.sorted(by: { $0.fullName < $1.fullName}))
+                        seal.fulfill(contacts)
                     }catch let error {
                         seal.reject(error)
                     }
@@ -56,6 +61,20 @@ class ContactsHelper {
         }
         
     }
+    
+    func groupContacts(contacts: [Contact]) -> [[Contact]] {
+        return contacts
+            .sorted(by: {$0.fullName < $1.fullName})
+            .group(by: {$0.type } )
+            .sorted(by: {$0[0].type.rawValue < $1[0].type.rawValue})
+    }
+    
+   
+    
+}
+
+//MARK: - Private Functions
+extension ContactsHelper {
     
     @objc private func onAddressBookchanged() {
         guard let delegate = delegate else {

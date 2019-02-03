@@ -15,7 +15,7 @@ extension UITableView {
         lblMsg.text = message
         lblMsg.textAlignment = .center
         lblMsg.textColor = UIColor.textMuted
-        lblMsg.font = UIFont.systemFont(ofSize: 32, weight: UIFont.Weight.medium)
+        lblMsg.font = UIFont.systemFont(ofSize: 26, weight: UIFont.Weight.medium)
         
         let bgView = UIView(frame: CGRect(x: 0, y: 0, width: frame.width, height: frame.height))
         bgView.addSubview(lblMsg)
@@ -35,3 +35,5 @@ extension UITableView {
     }
     
 }
+
+

@@ -1,19 +1,18 @@
 //
-//  ContactCell.swift
+//  ProfileCell.swift
 //  LaApp
 //
-//  Created by Miyo Alpízar on 2/2/19.
+//  Created by Miyo Alpízar on 2/3/19.
 //  Copyright © 2019 Efrain Emigdio Navarrete Alpízar. All rights reserved.
 //
 
 import UIKit
-import SnapKit
 
-class ContactCell: UITableViewCell {
-
-    private let IMAGE_SIZE: CGFloat = 54
+class ProfileCell: UITableViewCell {
     
-    public var contact: Contact? {
+    private let IMAGE_SIZE: CGFloat = 74
+    
+    var contact: Contact? = nil {
         didSet {
             if let contact = contact {
                 initalsLabel.isHidden = false
@@ -22,26 +21,11 @@ class ContactCell: UITableViewCell {
                     initalsLabel.isHidden = true
                 }
                 nameContact.text = contact.fullName
-                phoneContact.text = contact.tenPhoneNumber
                 initalsLabel.text = contact.initials
-                if contact.type == .noNumber {
-                    accessoryType = .none
-                    selectionStyle = .none
-                    setAlpha(alpha: 0.2)
-                }else {
-                    accessoryType = .disclosureIndicator
-                    selectionStyle = .default
-                    setAlpha()
-                }
             }
         }
     }
     
-    private func setAlpha(alpha: CGFloat = 1.0) {
-        imageContact.alpha = alpha
-        nameContact.alpha = alpha
-        phoneContact.alpha = alpha        
-    }
     
     private let imageContact: UIImageView = {
         let imageView = UIImageView()
@@ -60,28 +44,19 @@ class ContactCell: UITableViewCell {
         return label
     }()
     
-    private let stackContact: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.distribution = UIStackView.Distribution.equalCentering
-        stack.alignment = UIStackView.Alignment.fill
-        return stack
-    }()
-    
     private let nameContact: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 15, weight: UIFont.Weight.black)
         label.textColor = UIColor.textPrimary
-        label.numberOfLines = 1
+        label.numberOfLines = 2
         return label
     }()
     
-    private let phoneContact: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 13, weight: UIFont.Weight.regular)
-        label.textColor = UIColor.textMuted
-        label.numberOfLines = 1
-        return label
+    private let btnMessage: UIButton = {
+        let btn = UIButton(type: UIButton.ButtonType.system)
+        btn.setImage(#imageLiteral(resourceName: "icons8-speech_bubble"), for: UIControl.State.normal)
+        btn.tintColor = UIColor.accent
+        return btn
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -89,40 +64,39 @@ class ContactCell: UITableViewCell {
         setupViews()
     }
     
-    private let bgView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.bgDarker
-        return view
-    }()
-    
     private func setupViews() {
-        backgroundColor = UIColor.bgPrimary
-        selectedBackgroundView = bgView
-        
+        selectionStyle = .none
         addSubview(imageContact)
         imageContact.addSubview(initalsLabel)
-        addSubview(stackContact)
-        stackContact.addArrangedSubview(nameContact)
-        stackContact.addArrangedSubview(phoneContact)
-        
-        imageContact.makeCornerRadius(cornerRadius: IMAGE_SIZE/2)
+        addSubview(nameContact)
+        addSubview(btnMessage)
         
         imageContact.snp.makeConstraints { (make) in
-            make.leading.equalToSuperview().offset(17)
+            make.centerY.equalToSuperview()
             make.width.equalTo(IMAGE_SIZE)
             make.height.equalTo(IMAGE_SIZE)
-            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(17)
         }
         
         initalsLabel.snp.makeConstraints { (make) in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))
         }
         
-        stackContact.snp.makeConstraints { (make) in
+        nameContact.snp.makeConstraints { (make) in
+            make.centerY.equalToSuperview()
             make.leading.equalTo(imageContact.snp.trailing).offset(8)
-            make.trailing.equalToSuperview().offset(-35)
+            make.trailing.equalTo(btnMessage.snp.leading).offset(-8)
+        }
+        
+        btnMessage.snp.makeConstraints { (make) in
+            make.trailing.equalToSuperview().offset(-14)
+            make.width.equalTo(24)
+            make.height.equalTo(24)
             make.centerY.equalToSuperview()
         }
+        
+        imageContact.makeCornerRadius(cornerRadius: IMAGE_SIZE/2)
+        
     }
     
     override func prepareForReuse() {

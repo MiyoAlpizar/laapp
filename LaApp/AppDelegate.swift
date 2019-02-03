@@ -25,17 +25,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        
         UINavigationBar.appearance().tintColor = UIColor.primary
         UITextField.appearance().tintColor = UIColor.accent
-        UIButton.appearance().tintColor = UIColor.accent
+        UIButton.appearance().tintColor = UIColor.tintPrimary
         
         
         let navigationBarAppearace = UINavigationBar.appearance()
         navigationBarAppearace.barStyle = .blackTranslucent
         navigationBarAppearace.barTintColor = UIColor.primary
         
-        let textViewAppearance = UITextView.appearance()
-        textViewAppearance.keyboardAppearance = .dark
         
-        UITableView.appearance().backgroundColor = UIColor.bgPrimary
+        
+        let tableViewAppearance = UITableView.appearance()
+        
+        tableViewAppearance.backgroundColor = UIColor.bgPrimary
+        tableViewAppearance.separatorColor = UIColor.black
+        
+        UITableViewCell.appearance().backgroundColor = UIColor.bgPrimary
         
         
     }
