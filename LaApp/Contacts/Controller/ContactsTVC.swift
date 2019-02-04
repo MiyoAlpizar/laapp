@@ -22,8 +22,9 @@ class ContactsTVC: UITableViewController {
         setupController()
         setupTableView()
         loadContacts()
+        
     }
-
+    
     // MARK: - Table view data source
     override func numberOfSections(in tableView: UITableView) -> Int {
         return groupedContacts.count
@@ -67,9 +68,8 @@ class ContactsTVC: UITableViewController {
             return
         }
         let contactTVC = ContactTVC(style: .grouped)
-        contactTVC.contactProfile = contact.toContactProfile()
+        contactTVC.contact = contact
         navigationController?.pushViewController(contactTVC, animated: true)
-        
     }
     
     private func setupTableView() {
@@ -88,6 +88,7 @@ class ContactsTVC: UITableViewController {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.keyboardAppearance = .dark
+        searchController.searchBar.barStyle = .blackTranslucent
         definesPresentationContext = true
         ContactsHelper.shared.delegate = self
         
@@ -109,7 +110,10 @@ extension ContactsTVC: ContactsDelegate {
             self.filterContacts()
         }.catch { [weak self] (error) in
             guard let `self` = self else { return }
-            self.alert(message: error.localizedDescription)
+            self.alert(title: "Atención", message: error.localizedDescription, buttonText: "Configuración", completion: { [weak self] in
+                guard let `self` = self else { return }
+                self.openSettings()
+            })
         }
     }
     

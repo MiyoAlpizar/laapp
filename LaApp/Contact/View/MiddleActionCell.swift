@@ -25,20 +25,19 @@ class MiddleActionCell: UITableViewCell {
         return label
     }()
     
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupViews()
-    }
-    
     private let bgView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.bgDarker
         return view
     }()
     
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupViews()
+    }
+    
     private func setupViews() {
         selectedBackgroundView = bgView
-        
         addSubview(lblAction)
         lblAction.snp.makeConstraints { (make) in
             make.leading.equalToSuperview().offset(17)

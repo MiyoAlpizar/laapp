@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14460.32" systemVersion="18C54" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="EContact" representedClassName="EContact" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" attributeType="String" syncable="YES"/>
+        <relationship name="numbers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ENumber" inverseName="contact" inverseEntity="ENumber" syncable="YES"/>
+    </entity>
+    <entity name="ENumber" representedClassName="ENumber" syncable="YES">
+        <attribute name="number" attributeType="String" syncable="YES"/>
+        <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="EContact" inverseName="numbers" inverseEntity="EContact" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="ENumber" positionX="-218.6328125" positionY="97.17578125" width="128" height="75"/>
+        <element name="EContact" positionX="162.56640625" positionY="257.48046875" width="128" height="88"/>
+    </elements>
+</model>

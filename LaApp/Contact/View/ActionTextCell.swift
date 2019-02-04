@@ -28,15 +28,9 @@ class ActionTextCell: UITableViewCell {
         setupViews()
     }
     
-    private let bgView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.bgDarker
-        return view
-    }()
-    
+
     private func setupViews() {
-        selectedBackgroundView = bgView
-        
+        selectionStyle = .none
         addSubview(lblAction)
         lblAction.snp.makeConstraints { (make) in
             make.leading.equalToSuperview().offset(17)

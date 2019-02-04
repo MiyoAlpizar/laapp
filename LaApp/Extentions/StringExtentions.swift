@@ -15,6 +15,9 @@ extension String {
             .joined()
     }
     
+    /**
+     Converts the string in searchable string, usefull for filter
+     */
     var forSearch: String {
         return self.lowercased().folding(options: [.diacriticInsensitive, .caseInsensitive], locale: nil)
     }

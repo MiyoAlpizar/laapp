@@ -9,20 +9,24 @@
 import Foundation
 
 struct Contact {
+    let id: String
     let firstName: String
     let lastName: String
     let emails: [String]
     let numbers: [String]
     let image: Data?
-    var description: String
+    var detail: String
+    var type: ContactType
     
-    init(firstName: String, lastName: String,emails: [String], numbers: [String], image: Data?) {
+    init(id: String,firstName: String, lastName: String,emails: [String], numbers: [String], image: Data?) {
+        self.id = id
         self.firstName = firstName
         self.lastName = lastName
         self.numbers = numbers
         self.image = image
         self.emails = emails
-        self.description = ""
+        self.detail = ""
+        self.type = .notIntApp
         self.setComputedProperties()
     }
     
@@ -60,10 +64,6 @@ struct Contact {
         return _thenPhoneNumber
     }
     
-    private var _type: ContactType = .inApp
-    var type: ContactType {
-        return _type
-    }
     
     
     private mutating func setComputedProperties() {
@@ -83,33 +83,38 @@ struct Contact {
         }
         
         if hasName && hasNumber {
-            _type = .notIntApp
+            type = .notIntApp
         }else if hasName && !hasNumber {
-            _type = .noNumber
+            type = .noNumber
         }else if hasNumber && !hasName {
-            _type = .noName
+            type = .noName
         }else {
-            _type = .inApp
+            type = .inApp
         }
         
     }
     
+    /**
+     Convert a Contact to a group to display in a TableView
+     - Returns:
+     Array of ContactProfileGroup
+     */
     func toContactProfile() -> [ContactProfileGroup] {
         var profile = [ContactProfileGroup]()
         
-        profile.append(ContactProfileGroup(type: ContactProfileType.contact, data: self))
+        profile.append(ContactProfileGroup(title: nil, type: ContactProfileType.contact, data: nil))
         
-        profile.append(ContactProfileGroup(type: ContactProfileType.phones, data: numbers))
+        profile.append(ContactProfileGroup(title: numbers.count > 1 ? "TELÉFONOS" : "TELÉFONO", type: ContactProfileType.phones, data: numbers))
         
         if emails.count > 0 {
-            profile.append(ContactProfileGroup(type: ContactProfileType.emails, data: emails))
+            profile.append(ContactProfileGroup(title: emails.count > 1 ? "EMAILS" : "EMAIL", type: ContactProfileType.emails, data: emails))
         }
         
         let action = type == .inApp ? "Actualizar datos": numbers.count > 1 ? "Registrar números" : "Registrar número"
         
-        profile.append(ContactProfileGroup(type: .description, data: description))
+        profile.append(ContactProfileGroup(title: "DESCRIPCIÓN", type: .description, data: detail))
         
-        profile.append(ContactProfileGroup(type: .save, data: action))
+        profile.append(ContactProfileGroup(title: nil, type: .save, data: action))
         
         return profile
     }

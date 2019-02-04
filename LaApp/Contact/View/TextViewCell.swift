@@ -8,11 +8,17 @@
 
 import UIKit
 
+protocol TextViewCellDelegate:class {
+    func textChanged(cell: TextViewCell, text: String)
+}
+
 class TextViewCell: UITableViewCell {
 
+    weak var delegate: TextViewCellDelegate?
+    
     let textView: UITextView = {
         let textView = UITextView()
-        textView.isScrollEnabled = false
+        textView.isScrollEnabled = true
         textView.keyboardAppearance = .dark
         textView.backgroundColor = UIColor.primary
         textView.textColor = UIColor.textPrimary
@@ -32,10 +38,22 @@ class TextViewCell: UITableViewCell {
         textView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 16, left: 17, bottom: 16, right: 10))
         }
+        textView.delegate = self
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
+extension TextViewCell: UITextViewDelegate {
+    
+    func textViewDidChange(_ textView: UITextView) {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.textChanged(cell: self, text: textView.text)
     }
     
 }

@@ -13,11 +13,8 @@ enum ContactProfileType {
 }
 
 struct ContactProfileGroup {
+    let title: String?
     let type: ContactProfileType
-    let data: Any
+    var data: Any?
 }
 
-struct ContactProfile {
-    let name: String
-    let image: Data?
-}

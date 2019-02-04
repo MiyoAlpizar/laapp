@@ -10,6 +10,11 @@ import UIKit
 
 extension UITableView {
     
+    /**
+     Creates a message for tableView when no data is available
+     - Parameters:
+     - Message: Default is Sin Resultados
+     */
     func emptyMessage(message: String = "Sin resultados") {
         let lblMsg = UILabel()
         lblMsg.text = message

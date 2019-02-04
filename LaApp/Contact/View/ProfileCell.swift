@@ -8,7 +8,13 @@
 
 import UIKit
 
+protocol ProfileCellDelegate: class {
+    func onSendMessagePressed()
+}
+
 class ProfileCell: UITableViewCell {
+    
+    weak var delegate: ProfileCellDelegate?
     
     private let IMAGE_SIZE: CGFloat = 74
     
@@ -55,7 +61,9 @@ class ProfileCell: UITableViewCell {
     private let btnMessage: UIButton = {
         let btn = UIButton(type: UIButton.ButtonType.system)
         btn.setImage(#imageLiteral(resourceName: "icons8-speech_bubble"), for: UIControl.State.normal)
-        btn.tintColor = UIColor.accent
+        btn.tintColor = UIColor.white
+        btn.backgroundColor = UIColor.tintPrimary
+        btn.imageEdgeInsets = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
         return btn
     }()
     
@@ -88,15 +96,26 @@ class ProfileCell: UITableViewCell {
             make.trailing.equalTo(btnMessage.snp.leading).offset(-8)
         }
         
+        let BTN_SIZE: CGFloat = 36
+        
         btnMessage.snp.makeConstraints { (make) in
             make.trailing.equalToSuperview().offset(-14)
-            make.width.equalTo(24)
-            make.height.equalTo(24)
+            make.width.equalTo(BTN_SIZE)
+            make.height.equalTo(BTN_SIZE)
             make.centerY.equalToSuperview()
         }
         
+        btnMessage.makeCornerRadius(cornerRadius: BTN_SIZE/2)
         imageContact.makeCornerRadius(cornerRadius: IMAGE_SIZE/2)
+        btnMessage.addTarget(self, action: #selector(btnPressed), for: UIControl.Event.touchUpInside)
         
+    }
+    
+    @objc private func btnPressed() {
+        guard let delegate = delegate else {
+            return
+        }
+        delegate.onSendMessagePressed()
     }
     
     override func prepareForReuse() {
