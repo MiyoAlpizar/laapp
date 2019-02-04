@@ -38,18 +38,38 @@ extension EContact {
     @objc(removeNumbers:)
     @NSManaged public func removeFromNumbers(_ values: NSSet)
     
-    static func insertNewContact(id: String, desc: String) -> Promise<EContact> {
+    
+    func deleteContact() -> Promise<Void> {
         return Promise { seal in
-            let contact = NSEntityDescription.insertNewObject(forEntityName: "EContact", into: CoreHelper.shared.context) as! EContact
-            contact.id = id
-            contact.desc = desc
+            self.numbers?.allObjects.forEach({ (number) in
+                if let number = number as? ENumber {
+                    CoreHelper.shared.context.delete(number)
+                }
+            })
+            CoreHelper.shared.context.delete(self)
             CoreHelper.shared.save()
             .done({ () in
-                seal.fulfill(contact)
+                print("Contact deleted")
+                seal.fulfill()
             }).catch({ (error) in
                 seal.reject(error)
             })
         }
+    }
+    
+    func deleteSilentContact() {
+        self.numbers?.allObjects.forEach({ (number) in
+            if let number = number as? ENumber {
+                CoreHelper.shared.context.delete(number)
+            }
+        })
+        CoreHelper.shared.context.delete(self)
+        CoreHelper.shared.save()
+            .done({ () in
+                print("Contact deleted")
+            }).catch({ (error) in
+                print("Error deleting contact: ",error.localizedDescription)
+            })
     }
     
     static func addUpdateContact(id: String, desc: String) -> Promise<EContact> {
